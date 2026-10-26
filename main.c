@@ -1,28 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void repeats(int size, const int *numbers, int *repeating, int *max, int *position)
+int count_occurrences(int size, const int *numbers, int target)
 {
-    *max = 0;
-    *position = 0;
+    int count = 0;
+
     for (int i = 0; i < size; i++)
     {
-        repeating[i] = 1;
-
-        for(int j = i + 1; j < size; j++)
+        if (numbers[i] == target)
         {
-            if (numbers[i] == numbers[j])
-            {
-                repeating[i]++;
-            }
+            count++;
         }
+    }
 
-        if (*max < repeating[i])
-        {
-            *max = repeating[i];
-            *position = i;
-        }
-    }    
+    return count;
 }
 
 int main(void)
@@ -30,9 +21,9 @@ int main(void)
     int size;
 
     printf("Enter the array size: ");
-    if (scanf("%d", &size) != 1 || size <= 0 || size > 100)
+    if (scanf("%d", &size) != 1 || size <= 0)
     {
-        printf("Error: Enter an integer from 1 to 100!\n");
+        printf("Error: Enter a positive integer!\n");
         return 1;
     }
 
@@ -42,44 +33,34 @@ int main(void)
         printf("Error: Memory allocation failed!\n");
         return 1;
     }
-    printf("Memory allocated.\n");
 
-    printf("Enter the numbers: \n");
+    printf("Memory allocated!\n");
+    
+    printf("Enter the numbers: ");
     for (int i = 0; i < size; i++)
     {
         if (scanf("%d", &numbers[i]) != 1)
         {
-            printf("Error: Invalid number!\n");
+            printf("Error: Type a number!\n");
             free(numbers);
             return 1;
         }
     }
 
-    printf("Array: ");
-    for (int i = 0; i < size; i++)
-    {  
-        printf("%d ", numbers[i]);
-    }
-    printf("\n");
-    
-    int max;
-    int position;
+    int target;
 
-    int *repeating = malloc(size * sizeof *repeating);
-    if (repeating == NULL)
+    printf("Which number should we count? ");
+    if (scanf("%d", &target) != 1)
     {
-        printf("Error: Memory allocation failed!\n");
+        printf("Error: Type a number!\n");
         free(numbers);
         return 1;
     }
 
-    repeats(size, numbers, repeating, &max, &position);
+    int count = count_occurrences(size, numbers, target);
 
-    int num_pos = numbers[position];
+    printf("Number %d appears %d times.\n", target, count);
 
-    printf("Result: Number %d repeats %d time.\n", num_pos, max);
-
-    free(repeating);
     free(numbers);
     return 0;
 }
